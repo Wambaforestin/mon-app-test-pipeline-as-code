@@ -27,13 +27,6 @@ pipeline {
             }
         }
 
-        stage('Install') {
-            steps {
-                echo '📦 Installation des dépendances...'
-                sh 'docker run --rm -v ${WORKSPACE}:/app -w /app ${APP_NAME}:${BUILD_NUMBER} npm ci'
-            }
-        }
-
         stage('Export HTML Static') {
             steps {
                 echo '📤 Export HTML statique...'
