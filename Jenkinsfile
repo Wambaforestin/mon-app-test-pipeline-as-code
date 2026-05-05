@@ -31,12 +31,13 @@ pipeline {
             steps {
                 echo '📤 Export HTML statique...'
                 sh '''
-                    docker run --rm \
-                        -v ${WORKSPACE}:/app \
-                        -w /app \
+                    CONTAINER_ID=$(docker create \
                         -e NEXT_PUBLIC_BASE_PATH=/${APP_NAME} \
                         ${APP_NAME}:${BUILD_NUMBER} \
-                        npm run build
+                        sh -c "npm run build")
+                    docker start -a $CONTAINER_ID
+                    docker cp $CONTAINER_ID:/app/out ${WORKSPACE}/out
+                    docker rm $CONTAINER_ID
                 '''
             }
         }
